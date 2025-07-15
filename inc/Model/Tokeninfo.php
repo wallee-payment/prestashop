@@ -41,7 +41,6 @@ class WalleeModelTokeninfo extends ObjectModel
         'fields' => array(
             'token_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'state' => array(
@@ -52,7 +51,6 @@ class WalleeModelTokeninfo extends ObjectModel
             ),
             'space_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'name' => array(
@@ -63,16 +61,13 @@ class WalleeModelTokeninfo extends ObjectModel
             ),
             'customer_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'payment_method_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'connector_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'date_add' => array(
                 'type' => self::TYPE_DATE,

@@ -59,7 +59,6 @@ class WalleeModelTransactioninfo extends ObjectModel
         'fields' => array(
             'transaction_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'state' => array(
@@ -70,12 +69,10 @@ class WalleeModelTransactioninfo extends ObjectModel
             ),
             'space_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'space_view_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'language' => array(
                 'type' => self::TYPE_STRING,
@@ -91,34 +88,27 @@ class WalleeModelTransactioninfo extends ObjectModel
             ),
             'authorization_amount' => array(
                 'type' => self::TYPE_FLOAT,
-                'validate' => 'isAnything'
             ),
             'image' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything',
                 'size' => 2047
             ),
             'image_base' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything',
                 'size' => 2047
             ),
             'user_failure_message' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything',
                 'size' => 2047
             ),
             'labels' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'payment_method_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'connector_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'order_id' => array(
                 'type' => self::TYPE_INT,
@@ -127,11 +117,9 @@ class WalleeModelTransactioninfo extends ObjectModel
             ),
             'failure_reason' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'locked_at' => array(
                 'type' => self::TYPE_DATE,
-                'validate' => 'isAnything',
                 'copy_post' => false
             ),
             'date_add' => array(

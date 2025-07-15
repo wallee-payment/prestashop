@@ -79,12 +79,10 @@ class WalleeModelMethodconfiguration extends ObjectModel
             ),
             'space_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'configuration_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'configuration_name' => array(
@@ -95,25 +93,20 @@ class WalleeModelMethodconfiguration extends ObjectModel
             ),
             'title' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'description' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'image' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything',
                 'size' => 2047
             ),
             'image_base' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything',
                 'size' => 2047
             ),
             'sort_order' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'date_add' => array(
                 'type' => self::TYPE_DATE,

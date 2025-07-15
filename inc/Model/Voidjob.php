@@ -47,7 +47,6 @@ class WalleeModelVoidjob extends ObjectModel
         'fields' => array(
             'void_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'state' => array(
                 'type' => self::TYPE_STRING,
@@ -57,12 +56,10 @@ class WalleeModelVoidjob extends ObjectModel
             ),
             'space_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'transaction_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'order_id' => array(
@@ -72,7 +69,6 @@ class WalleeModelVoidjob extends ObjectModel
             ),
             'failure_reason' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'date_add' => array(
                 'type' => self::TYPE_DATE,

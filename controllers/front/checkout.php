@@ -54,15 +54,17 @@ class WalleeCheckoutModuleFrontController extends ModuleFrontController
 
             ob_end_clean();
             header('Content-Type: application/json');
-            $this->ajaxDie(json_encode($reponse));
+            $this->ajaxRender(json_encode($reponse));
+            exit;
         } catch (Exception $e) {
             $this->context->cookie->wle_error = $this->module->l(
                 'There was an issue during the checkout, please try again.',
                 'checkout'
             );
-            $this->ajaxDie(json_encode(array(
+            $this->ajaxRender(json_encode(array(
                 'result' => 'failure'
             )));
+            exit;
         }
     }
 

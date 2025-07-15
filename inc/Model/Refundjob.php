@@ -57,7 +57,6 @@ class WalleeModelRefundjob extends ObjectModel
         'fields' => array(
             'refund_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything'
             ),
             'external_id' => array(
                 'type' => self::TYPE_STRING,
@@ -72,12 +71,10 @@ class WalleeModelRefundjob extends ObjectModel
             ),
             'space_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'transaction_id' => array(
                 'type' => self::TYPE_INT,
-                'validate' => 'isAnything',
                 'required' => true
             ),
             'order_id' => array(
@@ -87,7 +84,6 @@ class WalleeModelRefundjob extends ObjectModel
             ),
             'refund_parameters' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'apply_tries' => array(
                 'type' => self::TYPE_INT,
@@ -95,7 +91,6 @@ class WalleeModelRefundjob extends ObjectModel
             ),
             'failure_reason' => array(
                 'type' => self::TYPE_STRING,
-                'validate' => 'isAnything'
             ),
             'date_add' => array(
                 'type' => self::TYPE_DATE,

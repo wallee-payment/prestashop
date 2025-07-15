@@ -23,7 +23,7 @@ Support queries can be issued on the [wallee support site](https://app-wallee.co
 ____________________________________________________________________________
 | Prestashop 8 version   | Plugin major version   | Supported until        |
 |------------------------|------------------------|------------------------|
-| 9.0.x -                | 9.x                    | Further notice         |
+| 9.0.x -                | 2.x                    | Further notice         |
 | 8.0.x - 8.2.x          | 1.x                    | Further notice         |
 ----------------------------------------------------------------------------
 

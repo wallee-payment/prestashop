@@ -688,7 +688,7 @@ class WalleeHelper
             self::SHOP_SYSTEM             => 'prestashop',
             self::SHOP_SYSTEM_VERSION     => $shop_version,
             self::SHOP_SYSTEM_AND_VERSION => 'prestashop-' . $major_version . '.' . $minor_version,
-            self::PLUGIN_SYSTEM_VERSION   => '2.0.1',
+            self::PLUGIN_SYSTEM_VERSION   => '2.0.2',
             ];
     }
 }

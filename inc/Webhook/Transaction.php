@@ -145,9 +145,6 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
 
     protected function failed(\Wallee\Sdk\Model\Transaction $transaction, Order $sourceOrder)
     {
-        if (WalleeHelper::getOrderMeta($sourceOrder, 'fulfill')) {
-            return;
-        }
         // Do not send email
         WalleeBasemodule::startRecordingMailMessages();
         $errorStatusId = Configuration::get(WalleeBasemodule::CK_STATUS_FAILED);

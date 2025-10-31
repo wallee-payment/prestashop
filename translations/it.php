@@ -6,10 +6,8 @@ $_MODULE["<{wallee}prestashop>wallee_2d44cfb0186c8f8b0357c3c2d396e466"] = "Si de
 $_MODULE["<{wallee}prestashop>wallee_af01f8c298aa063d9c7490f00eddd2df"] = "Metodi di pagamento" ;
 $_MODULE["<{wallee}prestashop>wallee_f28128b38efbc6134dc40751ee21fd29"] = "Documents" ;
 $_MODULE["<{wallee}prestashop>wallee_c4dcb7da043e8fe88ce236dd7ab5bd"] = "Panoramica ordini" ;
-$_MODULE["<{wallee}prestashop>wallee_60bb0e3fbb418c3b115759ec57e7c039"] = "CronJobs" ;
 $_MODULE["<{wallee}prestashop>wallee_3abfe96726deefad1aa06f9a350f7925"] = "Si è verificato un problema con il carrello, alcuni metodi di pagamento non sono disponibili" ;
 $_MODULE["<{wallee}prestashop>wallee_4ac6305a88d6c3a217ff9e53722c7db5"] = "Si è verificato un problema imprevisto, è possibile riprovare o utilizzare un altro metodo di pagamento" ;
-$_MODULE["<{wallee}prestashop>adminwalleecronjobscontroller_60bb0e3fbb418c3b115759ec57e7c039"] = "CronJobs" ;
 $_MODULE["<{wallee}prestashop>adminwalleedocumentscontroller_b42cd3af71fc00ef268910709255320a"] = "Non sei autorizzato a visualizzare questo" ;
 $_MODULE["<{wallee}prestashop>adminwalleedocumentscontroller_ac352e93d675dd67b70ba65bd33c43d1"] = "Impossibile recuperare il documento" ;
 $_MODULE["<{wallee}prestashop>adminwalleedocumentscontroller_bb5522ddbf87e1cf496b6d45800387c2"] = "Il numero d'ordine non è disponibile" ;
@@ -212,14 +210,6 @@ $_MODULE["<{wallee}prestashop>transactionvoid_e49316b56d9fec6398032c59ef0f4214"]
 $_MODULE["<{wallee}prestashop>admin_help_buttons_a501af4b300ed900587dc6424efe05de"] = "Questo modulo richiede un account %s";
 $_MODULE["<{wallee}prestashop>admin_help_buttons_d67850bd126f070221dcfd5fa6317043"] = "S'inscrire";
 $_MODULE["<{wallee}prestashop>admin_help_buttons_5b6cf869265c13af8566f192b4ab3d2a"] = "Documentation";
-$_MODULE["<{wallee}prestashop>list_60bb0e3fbb418c3b115759ec57e7c039"] = "CronJobs";
-$_MODULE["<{wallee}prestashop>list_b718adec73e04ce3ec720dd11a06a308"] = "ID";
-$_MODULE["<{wallee}prestashop>list_46a2a41cc6e552044816a2d04634545d"] = "Status";
-$_MODULE["<{wallee}prestashop>list_2b7dabba0077abe3732e0418b048a56b"] = "Prévu";
-$_MODULE["<{wallee}prestashop>list_8428552d86c0d262a542a528af490afa"] = "Lancé";
-$_MODULE["<{wallee}prestashop>list_8f3d10eb21bd36347c258679eba9e92b"] = "Terminé";
-$_MODULE["<{wallee}prestashop>list_4c2a8fe7eaf24721cc7a9f0175115bd4"] = "Message";
-$_MODULE["<{wallee}prestashop>list_6a1f70fbe4c48508633dfa998294645b"] = "Nessun cron ancora disponibile" ;
 
 $_MODULE["<{wallee}prestashop>admin_after_header_c3798a64b0d1f21bb2a35e922bc552b3"] = "Ci sono %alcune attività manuali che richiedono la vostra attenzione" ;
 $_MODULE["<{wallee}prestashop>admin_after_header_46d159391a9c4ae7f1b5befe4304270a"] = "C'è un'attività manuale che richiede la vostra attenzione" ;

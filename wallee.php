@@ -32,7 +32,7 @@ class Wallee extends PaymentModule
         $this->author = 'wallee AG';
         $this->bootstrap = true;
         $this->need_instance = 0;
-        $this->version = '1.0.12';
+        $this->version = '1.0.14';
         $this->displayName = 'wallee';
         $this->description = $this->l('This PrestaShop module enables to process payments with %s.');
         $this->description = sprintf($this->description, 'wallee');
@@ -121,10 +121,6 @@ class Wallee extends PaymentModule
             'AdminWalleeOrder' => array(
                 'parentId' => -1, // No Tab in navigation
                 'name' => 'wallee ' . $this->l('Order Management')
-            ),
-            'AdminWalleeCronJobs' => array(
-                'parentId' => Tab::getIdFromClassName('AdminTools'),
-                'name' => 'wallee ' . $this->l('CronJobs')
             )
         );
     }
@@ -150,7 +146,6 @@ class Wallee extends PaymentModule
         $output .= WalleeBasemodule::handleSaveDownload($this);
         $output .= WalleeBasemodule::handleSaveSpaceViewId($this);
         $output .= WalleeBasemodule::handleSaveOrderStatus($this);
-        $output .= WalleeBasemodule::handleSaveCronSettings($this);
         $output .= WalleeBasemodule::displayHelpButtons($this);
         return $output . WalleeBasemodule::displayForm($this);
     }
@@ -165,7 +160,6 @@ class Wallee extends PaymentModule
             WalleeBasemodule::getDocumentForm($this),
             WalleeBasemodule::getSpaceViewIdForm($this),
             WalleeBasemodule::getOrderStatusForm($this),
-            WalleeBasemodule::getCronSettingsForm($this),
         );
     }
 
@@ -179,8 +173,7 @@ class Wallee extends PaymentModule
             WalleeBasemodule::getFeeItemConfigValues($this),
             WalleeBasemodule::getDownloadConfigValues($this),
             WalleeBasemodule::getSpaceViewIdConfigValues($this),
-            WalleeBasemodule::getOrderStatusConfigValues($this),
-            WalleeBasemodule::getCronSettingsConfigValues($this)
+            WalleeBasemodule::getOrderStatusConfigValues($this)
         );
     }
 
@@ -348,11 +341,6 @@ class Wallee extends PaymentModule
         }
     }
 
-    public function hookDisplayTop($params)
-    {
-        return  WalleeBasemodule::hookDisplayTop($this, $params);
-    }
-
     public function hookActionAdminControllerSetMedia($arr)
     {
         WalleeBasemodule::hookActionAdminControllerSetMedia($this, $arr);
@@ -369,10 +357,6 @@ class Wallee extends PaymentModule
         return $backendController->access('edit');
     }
 
-    public function hookWalleeCron($params)
-    {
-        return WalleeBasemodule::hookWalleeCron($params);
-    }
     /**
      * Show the manual task in the admin bar.
      * The output is moved with javascript to the correct place as better hook is missing.
@@ -382,7 +366,6 @@ class Wallee extends PaymentModule
     public function hookDisplayAdminAfterHeader()
     {
         $result = WalleeBasemodule::hookDisplayAdminAfterHeader($this);
-        $result .= WalleeBasemodule::getCronJobItem($this);
         return $result;
     }
 

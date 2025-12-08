@@ -332,6 +332,20 @@ class WalleeHelper
         if (isset($translatedString[$language])) {
             return $translatedString[$language];
         }
+
+        $countryIso = strtolower(Context::getContext()->country->iso_code);
+        // for example de-AT
+        $defaultLocale = strtolower($language) . '-' . strtoupper($countryIso);
+        if (isset($translatedString[$defaultLocale])) {
+            return $translatedString[$defaultLocale];
+        }
+
+        // for example de-DE, which is default on portal
+        $defaultLocale = strtolower($language) . '-' . strtoupper($language);
+        if (isset($translatedString[$defaultLocale])) {
+            return $translatedString[$defaultLocale];
+        }
+
         try {
             /* @var WalleeProviderLanguage $language_provider */
             $languageProvider = WalleeProviderLanguage::instance();
@@ -688,7 +702,7 @@ class WalleeHelper
             self::SHOP_SYSTEM             => 'prestashop',
             self::SHOP_SYSTEM_VERSION     => $shop_version,
             self::SHOP_SYSTEM_AND_VERSION => 'prestashop-' . $major_version . '.' . $minor_version,
-            self::PLUGIN_SYSTEM_VERSION   => '1.0.14',
+            self::PLUGIN_SYSTEM_VERSION   => '1.0.15',
             ];
     }
 }

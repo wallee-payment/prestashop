@@ -5,7 +5,7 @@
  * This Prestashop module enables to process payments with wallee (https://www.wallee.com).
  *
  * @author customweb GmbH (http://www.customweb.com/)
- * @copyright 2017 - 2025 customweb GmbH
+ * @copyright 2017 - 2026 customweb GmbH
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License (ASL 2.0)
  */
 
@@ -332,6 +332,20 @@ class WalleeHelper
         if (isset($translatedString[$language])) {
             return $translatedString[$language];
         }
+
+        $countryIso = strtolower(Context::getContext()->country->iso_code);
+        // for example de-AT
+        $defaultLocale = strtolower($language) . '-' . strtoupper($countryIso);
+        if (isset($translatedString[$defaultLocale])) {
+            return $translatedString[$defaultLocale];
+        }
+
+        // for example de-DE, which is default on portal
+        $defaultLocale = strtolower($language) . '-' . strtoupper($language);
+        if (isset($translatedString[$defaultLocale])) {
+            return $translatedString[$defaultLocale];
+        }
+
         try {
             /* @var WalleeProviderLanguage $language_provider */
             $languageProvider = WalleeProviderLanguage::instance();
@@ -395,6 +409,22 @@ class WalleeHelper
         if (count($summary['discounts']) > 0) {
             foreach ($summary['discounts'] as $discount) {
                 $toHash .= ((float) $discount['value_real']) . '-' . $discount['id_cart_rule'] . ';';
+            }
+        }
+
+        // Include address identifiers / update timestamps to detect address changes.
+        $invoiceAddressId = (int) $cart->id_address_invoice;
+        $deliveryAddressId = (int) $cart->id_address_delivery;
+        if ($invoiceAddressId > 0) {
+            $invoiceAddress = new Address($invoiceAddressId);
+            if (Validate::isLoadedObject($invoiceAddress)) {
+                $toHash .= 'inv-' . $invoiceAddressId . '-' . $invoiceAddress->date_upd . ';';
+            }
+        }
+        if ($deliveryAddressId > 0) {
+            $deliveryAddress = new Address($deliveryAddressId);
+            if (Validate::isLoadedObject($deliveryAddress)) {
+                $toHash .= 'del-' . $deliveryAddressId . '-' . $deliveryAddress->date_upd . ';';
             }
         }
 
@@ -688,7 +718,7 @@ class WalleeHelper
             self::SHOP_SYSTEM             => 'prestashop',
             self::SHOP_SYSTEM_VERSION     => $shop_version,
             self::SHOP_SYSTEM_AND_VERSION => 'prestashop-' . $major_version . '.' . $minor_version,
-            self::PLUGIN_SYSTEM_VERSION   => '2.0.3',
+            self::PLUGIN_SYSTEM_VERSION   => '2.0.4',
             ];
     }
 }

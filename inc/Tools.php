@@ -5,7 +5,7 @@
  * This Prestashop module enables to process payments with wallee (https://www.wallee.com).
  *
  * @author customweb GmbH (http://www.customweb.com/)
- * @copyright 2017 - 2025 customweb GmbH
+ * @copyright 2017 - 2026 customweb GmbH
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License (ASL 2.0)
  */
 
@@ -29,5 +29,20 @@ class WalleeTools
     public static function hashHmac($algo, $data, $key, $raw_output = false)
     {
         return call_user_func('hash_hmac', $algo, $data, $key, $raw_output);
+    }
+
+    /**
+     * Returns the currently installed wallee version of the module from the database.
+     *
+     * @return string|null
+     * @throws PrestaShopException
+     */
+    public static function getInstalledModuleVersion(): ?string
+    {
+        return Db::getInstance()->getValue(
+            'SELECT `version`
+             FROM `' . _DB_PREFIX_ . 'module`
+             WHERE `name` = "' . pSQL('wallee') . '"'
+        );
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+    <name>wallee</name>
+    <displayName>wallee</displayName>
+    <version>2.0.4</version>
+    <author>wallee AG</author>
+    <tab>payments_gateways</tab>
+</module>

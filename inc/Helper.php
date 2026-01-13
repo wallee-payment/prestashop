@@ -5,7 +5,7 @@
  * This Prestashop module enables to process payments with wallee (https://www.wallee.com).
  *
  * @author customweb GmbH (http://www.customweb.com/)
- * @copyright 2017 - 2025 customweb GmbH
+ * @copyright 2017 - 2026 customweb GmbH
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License (ASL 2.0)
  */
 
@@ -412,6 +412,22 @@ class WalleeHelper
             }
         }
 
+        // Include address identifiers / update timestamps to detect address changes.
+        $invoiceAddressId = (int) $cart->id_address_invoice;
+        $deliveryAddressId = (int) $cart->id_address_delivery;
+        if ($invoiceAddressId > 0) {
+            $invoiceAddress = new Address($invoiceAddressId);
+            if (Validate::isLoadedObject($invoiceAddress)) {
+                $toHash .= 'inv-' . $invoiceAddressId . '-' . $invoiceAddress->date_upd . ';';
+            }
+        }
+        if ($deliveryAddressId > 0) {
+            $deliveryAddress = new Address($deliveryAddressId);
+            if (Validate::isLoadedObject($deliveryAddress)) {
+                $toHash .= 'del-' . $deliveryAddressId . '-' . $deliveryAddress->date_upd . ';';
+            }
+        }
+
         return WalleeTools::hashHmac('sha256', $toHash, $cart->secure_key);
     }
 
@@ -702,7 +718,7 @@ class WalleeHelper
             self::SHOP_SYSTEM             => 'prestashop',
             self::SHOP_SYSTEM_VERSION     => $shop_version,
             self::SHOP_SYSTEM_AND_VERSION => 'prestashop-' . $major_version . '.' . $minor_version,
-            self::PLUGIN_SYSTEM_VERSION   => '1.0.15',
+            self::PLUGIN_SYSTEM_VERSION   => '1.0.16',
             ];
     }
 }

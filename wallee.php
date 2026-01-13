@@ -6,7 +6,7 @@
  * This Prestashop module enables to process payments with wallee (https://www.wallee.com).
  *
  * @author customweb GmbH (http://www.customweb.com/)
- * @copyright 2017 - 2025 customweb GmbH
+ * @copyright 2017 - 2026 customweb GmbH
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License (ASL 2.0)
  */
 
@@ -32,7 +32,7 @@ class Wallee extends PaymentModule
         $this->author = 'wallee AG';
         $this->bootstrap = true;
         $this->need_instance = 0;
-        $this->version = '1.0.15';
+        $this->version = '1.0.16';
         $this->displayName = 'wallee';
         $this->description = $this->l('This PrestaShop module enables to process payments with %s.');
         $this->description = sprintf($this->description, 'wallee');
@@ -104,7 +104,14 @@ class Wallee extends PaymentModule
     public function installHooks()
     {
         return WalleeBasemodule::installHooks($this) && $this->registerHook('paymentOptions') &&
-            $this->registerHook('actionFrontControllerSetMedia');
+            $this->registerHook('actionFrontControllerSetMedia') &&
+            $this->registerHook('actionValidateStepComplete') &&
+            $this->registerHook('actionObjectAddressAddAfter');
+    }
+
+    public function upgrade($version)
+    {
+        return true;
     }
 
     public function getBackendControllers()
@@ -236,7 +243,6 @@ class Wallee extends PaymentModule
         foreach (WalleeHelper::sortMethodConfiguration($methods) as $methodConfiguration) {
             $parameters = WalleeBasemodule::getParametersFromMethodConfiguration($this, $methodConfiguration, $cart, $shopId, $language);
             $parameters['priceDisplayTax'] = Group::getPriceDisplayMethod(Group::getCurrent()->id);
-            $parameters['iframe'] = $cart->iframe;
             $parameters['orderUrl'] = $this->context->link->getModuleLink(
                 'wallee',
                 'order',
@@ -376,7 +382,7 @@ class Wallee extends PaymentModule
                     $integrationType = (int) Configuration::get(WalleeBasemodule::CK_INTEGRATION);
 
                     // Only load JS when NOT payment page
-                    if ($integrationType !== 1) {
+                    if ($integrationType !== Configuration::get(WalleeBasemodule::CK_INTEGRATION_TYPE_PAYMENT_PAGE)) {
 
                         $jsUrl = WalleeServiceTransaction::instance()
                             ->getJavascriptUrl($cart);
@@ -408,6 +414,43 @@ class Wallee extends PaymentModule
             );
         }
     }
+
+    public function hookActionObjectAddressAddAfter($params)
+    {
+        $this->processAddressChange(isset($params['object']) ? $params['object'] : null);
+    }
+
+    public function hookActionValidateStepComplete($params)
+    {
+        if (isset($params['step_name']) && $params['step_name'] === 'addresses') {
+            $this->processAddressChange(null);
+        }
+    }
+
+    /**
+     * Refreshes the pending transaction when the checkout address is created/selected.
+     *
+     * @param Address|null $address
+     */
+    private function processAddressChange($address = null)
+    {
+        $cart = $this->context->cart;
+        if (!$cart || !Validate::isLoadedObject($cart)) {
+            return;
+        }
+
+        try {
+            WalleeServiceTransaction::instance()->refreshTransactionFromCart($cart);
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog(
+                'Wallee address refresh failed: ' . $e->getMessage(),
+                2,
+                null,
+                $this->name
+            );
+        }
+    }
+
 
     public function hookActionAdminControllerSetMedia($arr)
     {

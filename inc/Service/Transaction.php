@@ -5,7 +5,7 @@
  * This Prestashop module enables to process payments with wallee (https://www.wallee.com).
  *
  * @author customweb GmbH (http://www.customweb.com/)
- * @copyright 2017 - 2025 customweb GmbH
+ * @copyright 2017 - 2026 customweb GmbH
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License (ASL 2.0)
  */
 
@@ -1170,6 +1170,56 @@ class WalleeServiceTransaction extends WalleeServiceAbstract
             self::$transactionCache[$currentCartId] = $transaction;
         }
         return self::$transactionCache[$currentCartId];
+    }
+
+    /**
+     * Force-updates a pending transaction with the latest cart data (e.g. after an address change).
+     *
+     * @param Cart $cart
+     * @return \Wallee\Sdk\Model\Transaction|null
+     */
+    public function refreshTransactionFromCart(Cart $cart)
+    {
+        $ids = WalleeHelper::getCartMeta($cart, 'mappingIds');
+        if (!is_array($ids) || !isset($ids['spaceId'], $ids['transactionId'])) {
+            return null;
+        }
+
+        try {
+            $transaction = $this->getTransaction($ids['spaceId'], $ids['transactionId']);
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog(
+                'Failed to load transaction for address refresh: ' . $e->getMessage(),
+                2,
+                null,
+                'Wallee'
+            );
+            return null;
+        }
+
+        if ($transaction === null
+            || $transaction->getState() !== \Wallee\Sdk\Model\TransactionState::PENDING
+        ) {
+            return null;
+        }
+
+        return $this->updateTransactionFromCart($cart, $transaction);
+    }
+
+    /**
+     * Legacy helper kept for compatibility; delegates to refreshTransactionFromCart.
+     *
+     * @param Cart $cart
+     * @param Address $address
+     * @param int $spaceId
+     * @param int $transactionId
+     */
+    public function refreshTransactionAddress($cart, $address, $spaceId, $transactionId)
+    {
+        if (!isset($cart->id)) {
+            return null;
+        }
+        return $this->refreshTransactionFromCart($cart);
     }
 
     /**

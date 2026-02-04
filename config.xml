@@ -2,7 +2,7 @@
 <module>
     <name>wallee</name>
     <displayName>wallee</displayName>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
     <author>wallee AG</author>
     <tab>payments_gateways</tab>
 </module>

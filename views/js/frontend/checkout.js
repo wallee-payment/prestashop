@@ -32,22 +32,29 @@ jQuery(function ($) {
 
         modify_content : function () {
             $(".wallee-method-data").each(function (key, element) {
-                var infoId = $(element).closest('div.additional-information').attr('id');
+                var infoId = $(element).closest(
+                    '.js-additional-information, .payment-option__additional-information, .additional-information, div[id$="-additional-information"]'
+                ).attr('id');
                 var psId = infoId.substring(0, infoId.indexOf('-additional-information'));
                 var psContainer = $('#'+psId+'-container');
-                psContainer.children('label').children('img').addClass('wallee-image');
+                var $label = psContainer.find('label[for="' + psId + '"]').first();
+                $label.find('img').addClass('wallee-image');
                 psContainer.addClass('wallee-payment-option');
                 var fee = $(element).closest("div.additional-information").find(".wallee-payment-fee");
-                psContainer.children("label").append(fee);
+                $label.append(fee);
                 $("#"+psId).data("wallee-method-id", $(element).data("method-id")).data("wallee-configuration-id", $(element).data("configuration-id"));
             });
         },
 
         add_listeners : function () {
             var self = this;
-            $("input[name='payment-option']").off("click.wallee").on("click.wallee", {
-                self : this
-                }, this.payment_method_click);
+            $(document)
+                .off("change.wallee", "input[name='payment-option']")
+                .on(
+                    "change.wallee", "input[name='payment-option']", 
+                    { self: this },
+                    this.payment_method_click
+                );
             $('form.wallee-payment-form').each(function () {
                 this.originalSubmit = this.submit;
                 this.submit = function (evt) {

@@ -89,6 +89,8 @@ class WalleeBasemodule
 
     const TOTAL_MODE_WITHOUT_SHIPPING_EXC = 5;
 
+    const EMAIL_KEY_DOWNLOAD = 'download_mail';
+
     private static $recordMailMessages = false;
 
     private static $recordedMailMessages = array();

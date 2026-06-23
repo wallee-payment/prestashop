@@ -87,7 +87,8 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
             $order->setCurrentState($authorizedStatusId);
             $order->save();
         }
-        WalleeBasemodule::stopRecordingMailMessages();
+        $recordedMessages = WalleeBasemodule::stopRecordingMailMessages();
+        WalleeHelper::storeDeferredEmails($recordedMessages, $sourceOrder);
         if (Configuration::get(WalleeBasemodule::CK_MAIL, null, null, $sourceOrder->id_shop)) {
             // Send stored messages
             $messages = WalleeHelper::getOrderEmails($sourceOrder);
@@ -121,7 +122,8 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
                 $order->save();
             }
         }
-        WalleeBasemodule::stopRecordingMailMessages();
+        $recordedMessages = WalleeBasemodule::stopRecordingMailMessages();
+        WalleeHelper::storeDeferredEmails($recordedMessages, $sourceOrder);
         WalleeServiceTransaction::instance()->updateTransactionInfo($transaction, $sourceOrder);
     }
 
@@ -141,6 +143,7 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
         }
         WalleeBasemodule::stopRecordingMailMessages();
         WalleeServiceTransaction::instance()->updateTransactionInfo($transaction, $sourceOrder);
+        WalleeHelper::deleteOrderEmails($order, WalleeBasemodule::EMAIL_KEY_DOWNLOAD);
     }
 
     protected function failed(\Wallee\Sdk\Model\Transaction $transaction, Order $sourceOrder)
@@ -157,6 +160,7 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
         WalleeBasemodule::stopRecordingMailMessages();
         WalleeHelper::deleteOrderEmails($sourceOrder);
         WalleeServiceTransaction::instance()->updateTransactionInfo($transaction, $sourceOrder);
+        WalleeHelper::deleteOrderEmails($order, WalleeBasemodule::EMAIL_KEY_DOWNLOAD);
     }
 
     protected function fulfill(\Wallee\Sdk\Model\Transaction $transaction, Order $sourceOrder)
@@ -178,6 +182,7 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
         }
         WalleeBasemodule::stopRecordingMailMessages();
         WalleeServiceTransaction::instance()->updateTransactionInfo($transaction, $sourceOrder);
+        WalleeHelper::sendDeferredEmails($sourceOrder);
     }
 
     protected function voided(\Wallee\Sdk\Model\Transaction $transaction, Order $sourceOrder)
@@ -195,5 +200,6 @@ class WalleeWebhookTransaction extends WalleeWebhookOrderrelatedabstract
         }
         WalleeBasemodule::stopRecordingMailMessages();
         WalleeServiceTransaction::instance()->updateTransactionInfo($transaction, $sourceOrder);
+        WalleeHelper::deleteOrderEmails($order, WalleeBasemodule::EMAIL_KEY_DOWNLOAD);
     }
 }

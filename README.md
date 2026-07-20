@@ -12,7 +12,7 @@ To install module manually by dragging up zip file, please download [.zip archiv
 
 ## Documentation
 
-* [English](https://plugin-documentation.wallee.com/wallee-payment/prestashop/1.0.18/docs/en/documentation.html)
+* [English](https://plugin-documentation.wallee.com/wallee-payment/prestashop/1.0.19/docs/en/documentation.html)
 
 ## Support
 
@@ -28,4 +28,4 @@ ____________________________________________________________________________
 
 ## License
 
-Please see the [license file](@WalleeRepoPath(/LICENSE)) for more information.
+Please see the [license file](https://github.com/wallee-payment/prestashop/blob/8.x/master/LICENSE) for more information.

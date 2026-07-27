@@ -8,7 +8,7 @@ To install module manually by dragging up zip file, please download [.zip archiv
 ## Requirements
 
 * [PrestaShop](https://www.prestashop.com/) 9
-* [PHP](http://php.net/) 9.0 (minimum PHP version supported by Prestashop 9 version)
+* [PHP](http://php.net/) 8.1 (minimum PHP version supported by Prestashop 9 version)
 
 ## Documentation
 

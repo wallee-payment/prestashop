@@ -15,7 +15,7 @@ class AdminWalleeDocumentsController extends ModuleAdminController
     {
         parent::postProcess();
         // We want to be sure that displaying PDF is the last thing this controller will do
-        exit();
+        WalleeHelper::endAdminRequest();
     }
 
     public function initProcess()
@@ -28,14 +28,13 @@ class AdminWalleeDocumentsController extends ModuleAdminController
         if ($access['view'] === '1' && ($action = Tools::getValue('action'))) {
             $this->action = $action;
         } else {
-            die(
-                Tools::displayError(
-                    $this->module->l(
-                        'You do not have permission to view this.',
-                        'adminwalleedocumentscontroller'
-                    )
+            echo Tools::displayError(
+                $this->module->l(
+                    'You do not have permission to view this.',
+                    'adminwalleedocumentscontroller'
                 )
             );
+            WalleeHelper::endAdminRequest();
         }
     }
 

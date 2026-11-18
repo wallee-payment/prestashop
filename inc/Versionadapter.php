@@ -18,6 +18,26 @@ class WalleeVersionadapter
         return ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
     }
 
+    /**
+     * Returns the precision to use when rounding prices.
+     *
+     * PrestaShop 9 removed the _PS_PRICE_COMPUTE_PRECISION_ constant, so the configuration
+     * lookup returns null there, which silently degrades every ps_round() call to 0 decimals.
+     */
+    public static function getPriceComputePrecision()
+    {
+        if (defined('_PS_PRICE_COMPUTE_PRECISION_')) {
+            return (int) _PS_PRICE_COMPUTE_PRECISION_;
+        }
+
+        $context = Context::getContext();
+        if ($context !== null && Validate::isLoadedObject($context->currency)) {
+            return (int) $context->getComputingPrecision();
+        }
+
+        return 2;
+    }
+
     public static function getAddressFactory()
     {
         return ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');

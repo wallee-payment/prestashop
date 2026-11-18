@@ -418,8 +418,7 @@ class WalleeBackendDefaultstrategy implements WalleeBackendIstrategy
 
     private function createReductionsPartialRefundType(Order $order, array $parsedData)
     {
-        $configuration = WalleeVersionadapter::getConfigurationInterface();
-        $computePrecision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = WalleeVersionadapter::getPriceComputePrecision();
 
         $amount = 0;
         $reductions = array();
@@ -774,7 +773,10 @@ class WalleeBackendDefaultstrategy implements WalleeBackendIstrategy
             }
             $result['voucherCreated'] = true;
             $result['voucherCode'] = $cart_rule->code;
-            $result['voucherAmount'] = Tools::displayPrice($cart_rule->reduction_amount, $order->id_currency, false);
+            $result['voucherAmount'] = Context::getContext()->getCurrentLocale()->formatPrice(
+                $cart_rule->reduction_amount,
+                Currency::getIsoCodeById((int) $order->id_currency)
+            );
         }
         return $result;
     }
@@ -944,7 +946,10 @@ class WalleeBackendDefaultstrategy implements WalleeBackendIstrategy
                 }
                 $result['voucherCreated'] = true;
                 $result['voucherCode'] = $cartrule->code;
-                $result['voucherAmount'] = Tools::displayPrice($cartrule->reduction_amount, $order->id_currency, false);
+                $result['voucherAmount'] = Context::getContext()->getCurrentLocale()->formatPrice(
+                    $cartrule->reduction_amount,
+                    Currency::getIsoCodeById((int) $order->id_currency)
+                );
             }
         }
         return $result;

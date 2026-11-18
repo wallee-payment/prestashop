@@ -75,7 +75,21 @@ class WalleeSmartyfunctions
     {
         return strip_tags($params['text'], '<a><b><strong><i><img><span><div>');
     }
-    
+
+    /**
+     * Formats a price in the current context's currency and locale.
+     *
+     * Replacement for Tools::displayPrice(), which was removed in PrestaShop 9.
+     *
+     * @return string
+     */
+    public static function displayPrice($params, $smarty)
+    {
+        $context = Context::getContext();
+        $formatted = $context->getCurrentLocale()->formatPrice($params['price'], $context->currency->iso_code);
+        return htmlspecialchars($formatted, ENT_QUOTES, 'UTF-8');
+    }
+
     /**
      * Returns the URL to the void detail view in wallee.
      *

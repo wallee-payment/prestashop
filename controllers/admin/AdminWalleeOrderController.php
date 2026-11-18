@@ -14,7 +14,7 @@ class AdminWalleeOrderController extends ModuleAdminController
     public function postProcess()
     {
         parent::postProcess();
-        exit();
+        WalleeHelper::endAdminRequest();
     }
 
     public function initProcess()
@@ -36,7 +36,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                     )
                 )
             );
-            die();
+            WalleeHelper::endAdminRequest();
         }
     }
 
@@ -50,13 +50,13 @@ class AdminWalleeOrderController extends ModuleAdminController
                 echo json_encode(array(
                     'success' => 'true'
                 ));
-                die();
+                WalleeHelper::endAdminRequest();
             } catch (Exception $e) {
                 echo json_encode(array(
                     'success' => 'false',
                     'message' => $e->getMessage()
                 ));
-                die();
+                WalleeHelper::endAdminRequest();
             }
         } else {
             echo json_encode(
@@ -65,7 +65,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                     'message' => $this->module->l('Incomplete Request.', 'adminwalleeordercontroller')
                 )
             );
-            die();
+            WalleeHelper::endAdminRequest();
         }
     }
 
@@ -84,7 +84,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                         )
                     )
                 );
-                die();
+                WalleeHelper::endAdminRequest();
             } catch (Exception $e) {
                 echo json_encode(
                     array(
@@ -92,7 +92,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                         'message' => WalleeHelper::cleanExceptionMessage($e->getMessage())
                     )
                 );
-                die();
+                WalleeHelper::endAdminRequest();
             }
         } else {
             echo json_encode(
@@ -101,7 +101,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                     'message' => $this->module->l('Incomplete Request.', 'adminwalleeordercontroller')
                 )
             );
-            die();
+            WalleeHelper::endAdminRequest();
         }
     }
 
@@ -120,7 +120,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                         )
                     )
                 );
-                die();
+                WalleeHelper::endAdminRequest();
             } catch (Exception $e) {
                 echo json_encode(
                     array(
@@ -128,7 +128,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                         'message' => WalleeHelper::cleanExceptionMessage($e->getMessage())
                     )
                 );
-                die();
+                WalleeHelper::endAdminRequest();
             }
         } else {
             echo json_encode(
@@ -137,7 +137,7 @@ class AdminWalleeOrderController extends ModuleAdminController
                     'message' => $this->module->l('Incomplete Request.', 'adminwalleeordercontroller')
                 )
             );
-            die();
+            WalleeHelper::endAdminRequest();
         }
     }
 }

@@ -39,20 +39,22 @@ class WalleeWebhookModuleFrontController extends ModuleFrontController
 
             $signature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
 
-            $installedVersion = WalleeTools::getInstalledModuleVersion();
+            if (empty($signature)) {
+                throw new WalleeExceptionInvalidwebhooksignature('Missing webhook signature.');
+            }
 
-            if (version_compare($installedVersion, '2.0.4', '>=')) {
-                if (empty($signature)) {
-                    throw new Exception('Missing webhook signature.');
-                }
-
-                $encryptionService = new \Wallee\Sdk\Service\WebhookEncryptionService(
-                    WalleeHelper::getApiClient()
-                );
-                // Checking if webhook has correct signature
-                if (!$encryptionService->isContentValid($signature, $rawRequestBody)) {
-                    throw new Exception('Invalid webhook signature.');
-                }
+            $encryptionService = new \Wallee\Sdk\Service\WebhookEncryptionService(
+                WalleeHelper::getApiClient()
+            );
+            // Checking if webhook has correct signature. A malformed signature header is treated the same as an
+            // invalid one, since isContentValid() throws InvalidArgumentException instead of returning false for it.
+            try {
+                $isContentValid = $encryptionService->isContentValid($signature, $rawRequestBody);
+            } catch (InvalidArgumentException $e) {
+                throw new WalleeExceptionInvalidwebhooksignature($e->getMessage(), 0, $e);
+            }
+            if (!$isContentValid) {
+                throw new WalleeExceptionInvalidwebhooksignature('Invalid webhook signature.');
             }
 
             $parsed = json_decode(trim($rawRequestBody));
@@ -73,6 +75,13 @@ class WalleeWebhookModuleFrontController extends ModuleFrontController
             $webhookHandler = $webhookHandlerClassName::instance();
             $webhookHandler->process($request);
             header('HTTP/1.1 200 OK');
+            die();
+        } catch (WalleeExceptionInvalidwebhooksignature $e) {
+            // We log the error but return 200 so the sender does not retry a request that will never carry a
+            // valid signature, since it is not a genuine webhook.
+            PrestaShopLogger::addLog($e->getMessage(), 3, null, 'WalleeWebhookEntity');
+            header('HTTP/1.1 200 OK');
+            echo $e->getMessage();
             die();
         } catch (Exception $e) {
             PrestaShopLogger::addLog($e->getMessage(), 3, null, 'WalleeWebhookEntity');

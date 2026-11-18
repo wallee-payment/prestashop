@@ -718,7 +718,7 @@ class WalleeHelper
             self::SHOP_SYSTEM             => 'prestashop',
             self::SHOP_SYSTEM_VERSION     => $shop_version,
             self::SHOP_SYSTEM_AND_VERSION => 'prestashop-' . $major_version . '.' . $minor_version,
-            self::PLUGIN_SYSTEM_VERSION   => '2.0.7',
+            self::PLUGIN_SYSTEM_VERSION   => '2.0.8',
             ];
     }
 
@@ -767,5 +767,26 @@ class WalleeHelper
             }
         }
         self::deleteOrderEmails($order, WalleeBasemodule::EMAIL_KEY_DOWNLOAD);
+    }
+
+    /**
+     * Ends the current back office request, after the response has already been echoed.
+     *
+     * The output has to be the whole response, so the request must end here: Prestashop 9
+     * would otherwise append the rendered back office page to it. Ending the request skips
+     * Controller::smartyOutputContent(), which is where Prestashop writes the employee
+     * cookie, so it is written here first.
+     */
+    public static function endAdminRequest()
+    {
+        $context = Context::getContext();
+        if ($context !== null && $context->cookie !== null) {
+            try {
+                $context->cookie->write();
+            } catch (Exception $e) {
+                PrestaShopLogger::addLog($e->getMessage(), 1, null, 'Wallee');
+            }
+        }
+        exit();
     }
 }

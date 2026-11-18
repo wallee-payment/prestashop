@@ -330,8 +330,7 @@ class WalleeServiceRefund extends WalleeServiceAbstract
         $baseLineItems = $this->getBaseLineItems($spaceId, $transactionId);
         $reductionAmount = WalleeHelper::getReductionAmount($baseLineItems, $reductions);
 
-        $configuration = WalleeVersionadapter::getConfigurationInterface();
-        $computePrecision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = WalleeVersionadapter::getPriceComputePrecision();
 
         if (Tools::ps_round($refundTotal, $computePrecision) != Tools::ps_round($reductionAmount, $computePrecision)) {
             $fixedReductions = array();
@@ -375,7 +374,7 @@ class WalleeServiceRefund extends WalleeServiceAbstract
      * @param \Wallee\Sdk\Model\Refund $refund
      * @return \Wallee\Sdk\Model\LineItem[]
      */
-    protected function getBaseLineItems($spaceId, $transactionId, \Wallee\Sdk\Model\Refund $refund = null)
+    protected function getBaseLineItems($spaceId, $transactionId, ?\Wallee\Sdk\Model\Refund $refund = null)
     {
         $lastSuccessfulRefund = $this->getLastSuccessfulRefund($spaceId, $transactionId, $refund);
         if ($lastSuccessfulRefund) {
@@ -433,7 +432,7 @@ class WalleeServiceRefund extends WalleeServiceAbstract
     protected function getLastSuccessfulRefund(
         $spaceId,
         $transactionId,
-        \Wallee\Sdk\Model\Refund $refund = null
+        ?\Wallee\Sdk\Model\Refund $refund = null
     ) {
         $query = new \Wallee\Sdk\Model\EntityQuery();
 

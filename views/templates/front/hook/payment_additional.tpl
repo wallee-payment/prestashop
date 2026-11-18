@@ -17,9 +17,9 @@
 	<span class="wallee-surcharge wallee-additional-amount"><span class="wallee-surcharge-text wallee-additional-amount-test">{l s='Minimum Sales Surcharge:' mod='wallee'}</span>
 		<span class="wallee-surcharge-value wallee-additional-amount-value">
 			{if $priceDisplayTax}
-				{Tools::displayPrice($surchargeValues.surcharge_total)|escape:'html':'UTF-8'} {l s='(tax excl.)' mod='wallee'}
+				{wallee_display_price price=$surchargeValues.surcharge_total} {l s='(tax excl.)' mod='wallee'}
 	        {else}
-	        	{Tools::displayPrice($surchargeValues.surcharge_total_wt)|escape:'html':'UTF-8'} {l s='(tax incl.)' mod='wallee'}
+	        	{wallee_display_price price=$surchargeValues.surcharge_total_wt} {l s='(tax incl.)' mod='wallee'}
 	        {/if}
        </span>
    </span>
@@ -28,9 +28,9 @@
 	<span class="wallee-payment-fee wallee-additional-amount"><span class="wallee-payment-fee-text wallee-additional-amount-test">{l s='Payment Fee:' mod='wallee'}</span>
 		<span class="wallee-payment-fee-value wallee-additional-amount-value">
 			{if ($priceDisplayTax)}
-	          	{Tools::displayPrice($feeValues.fee_total)|escape:'html':'UTF-8'} {l s='(tax excl.)' mod='wallee'}
+	          	{wallee_display_price price=$feeValues.fee_total} {l s='(tax excl.)' mod='wallee'}
 	        {else}
-	          	{Tools::displayPrice($feeValues.fee_total_wt)|escape:'html':'UTF-8'} {l s='(tax incl.)' mod='wallee'}
+	          	{wallee_display_price price=$feeValues.fee_total_wt} {l s='(tax incl.)' mod='wallee'}
 	        {/if}
        </span>
    </span>

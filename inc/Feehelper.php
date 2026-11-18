@@ -109,8 +109,6 @@ class WalleeFeehelper
                 'surcharge_total_wt' => 0
             );
         }
-        $configuration = WalleeVersionadapter::getConfigurationInterface();
-
         $amount = (float) Configuration::get(WalleeBasemodule::CK_SURCHARGE_AMOUNT);
 
         $amountConverted = Tools::convertPrice($amount, Currency::getCurrencyInstance((int) $cart->id_currency));
@@ -151,7 +149,7 @@ class WalleeFeehelper
             Currency::getCurrencyInstance((int) $cart->id_currency)
         );
 
-        $computePrecision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = WalleeVersionadapter::getPriceComputePrecision();
 
         if (Tools::ps_round($total, $computePrecision) >= Tools::ps_round($surchargeBaseConverted, $computePrecision)) {
             return array(
@@ -204,8 +202,6 @@ class WalleeFeehelper
             );
         }
 
-        $configuration = WalleeVersionadapter::getConfigurationInterface();
-
         $fixed = $methodConfiguration->getFeeFixed();
 
         $feeFixedConverted = Tools::convertPrice($fixed, Currency::getCurrencyInstance((int) $cart->id_currency));
@@ -248,7 +244,7 @@ class WalleeFeehelper
         $product = new Product($feeProductId);
 
         $taxGroup = $product->getIdTaxRulesGroup();
-        $computePrecision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = WalleeVersionadapter::getPriceComputePrecision();
 
         $result = array(
             'fee_total' => Tools::ps_round($feeTotal, $computePrecision),

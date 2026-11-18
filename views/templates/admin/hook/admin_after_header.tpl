@@ -28,7 +28,7 @@
 					{if $manualTotal > 0}
 						<a href="{$manualUrl|escape:'html':'UTF-8'}" target="_blank">
 							<p>{if $manualTotal > 1}
-								{l s='There are %s manual tasks that need your attention.' sprintf=$manualTotal mod='wallee'}
+								{l s='There are %s manual tasks that need your attention.' sprintf=[$manualTotal] mod='wallee'}
 							{else}
 								{l s='There is a manual task that needs your attention.' mod='wallee'}
 							{/if}

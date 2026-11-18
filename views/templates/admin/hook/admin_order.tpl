@@ -41,7 +41,7 @@
 				{foreach from=$affectedOrders item=other}
 					<li>
 						<a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$other|intval}">
-							{l s='Order %d' sprintf=$other mod='wallee' js=1}
+							{l s='Order %d' sprintf=[$other] mod='wallee' js=1}
 						</a>
 					</li>
 				{/foreach}
@@ -59,7 +59,7 @@
 				{foreach from=$affectedOrders item=other}
 					<li>
 						<a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$other|intval}">
-							{l s='Order %d' sprintf=$other mod='wallee'}
+							{l s='Order %d' sprintf=[$other] mod='wallee'}
 						</a>
 					</li>
 				{/foreach}
@@ -94,23 +94,23 @@
 
 {if isset($refundChanges)}
 	<div style="display:none;" class="hidden-print" id="wallee_changes_refund">
-		<p id="wallee_refund_online_text_total">{l s='This refund is sent to %s and money is transfered back to the customer.' sprintf='wallee' mod='wallee'}</p>
-		<p id="wallee_refund_offline_text_total" style="display:none;">{l s='This refund is sent to %s, but [1]no[/1] money is transfered back to the customer.' tags=['<b>'] sprintf='wallee' mod='wallee'}</p>
-		<p id="wallee_refund_no_text_total" style="display:none;">{l s='This refund is [1]not[/1] sent to %s.' tags=['<b>'] sprintf='wallee' mod='wallee'}</p>
+		<p id="wallee_refund_online_text_total">{l s='This refund is sent to %s and money is transfered back to the customer.' sprintf=['wallee'] mod='wallee'}</p>
+		<p id="wallee_refund_offline_text_total" style="display:none;">{l s='This refund is sent to %s, but [1]no[/1] money is transfered back to the customer.' tags=['<b>'] sprintf=['wallee'] mod='wallee'}</p>
+		<p id="wallee_refund_no_text_total" style="display:none;">{l s='This refund is [1]not[/1] sent to %s.' tags=['<b>'] sprintf=['wallee'] mod='wallee'}</p>
 		<p id="wallee_refund_offline_span_total" class="checkbox" style="display: none;">
 			<label for="wallee_refund_offline_cb_total">
 				<input type="checkbox" id="wallee_refund_offline_cb_total" name="wallee_offline">
-				{l s='Send as offline refund to %s.' sprintf='wallee' mod='wallee'}
+				{l s='Send as offline refund to %s.' sprintf=['wallee'] mod='wallee'}
 			</label>
 		</p>
 
-		<p id="wallee_refund_online_text_partial">{l s='This refund is sent to %s and money is transfered back to the customer.' sprintf='wallee' mod='wallee'}</p>
-		<p id="wallee_refund_offline_text_partial" style="display:none;">{l s='This refund is sent to %s, but [1]no[/1] money is transfered back to the customer.' tags=['<b>'] sprintf='wallee' mod='wallee'}</p>
-		<p id="wallee_refund_no_text_partial" style="display:none;">{l s='This refund is [1]not[/1] sent to %s.' tags=['<b>'] sprintf='wallee' mod='wallee'}</p>
+		<p id="wallee_refund_online_text_partial">{l s='This refund is sent to %s and money is transfered back to the customer.' sprintf=['wallee'] mod='wallee'}</p>
+		<p id="wallee_refund_offline_text_partial" style="display:none;">{l s='This refund is sent to %s, but [1]no[/1] money is transfered back to the customer.' tags=['<b>'] sprintf=['wallee'] mod='wallee'}</p>
+		<p id="wallee_refund_no_text_partial" style="display:none;">{l s='This refund is [1]not[/1] sent to %s.' tags=['<b>'] sprintf=['wallee'] mod='wallee'}</p>
 		<p id="wallee_refund_offline_span_partial" class="checkbox" style="display: none;">
 			<label for="wallee_refund_offline_cb_partial">
 				<input type="checkbox" id="wallee_refund_offline_cb_partial" name="wallee_offline">
-				{l s='Send as offline refund to %s.' sprintf='wallee' mod='wallee'}
+				{l s='Send as offline refund to %s.' sprintf=['wallee'] mod='wallee'}
 			</label>
 		</p>
 	</div>

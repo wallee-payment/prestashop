@@ -16,8 +16,6 @@ class WalleeCartruleaccessor extends CartRule
 {
     public static function checkProductRestrictionsStatic(CartRule $cartRule, Cart $cart)
     {
-        $context = Context::getContext()->cloneContext();
-        $context->cart = $cart;
-        return $cartRule->checkProductRestrictions($context, true);
+        return $cartRule->checkProductRestrictionsFromCart($cart, true, false);
     }
 }

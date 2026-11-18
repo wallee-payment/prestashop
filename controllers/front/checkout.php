@@ -61,6 +61,14 @@ class WalleeCheckoutModuleFrontController extends ModuleFrontController
                 'There was an issue during the checkout, please try again.',
                 'checkout'
             );
+            // Discard everything printed before, so that the response stays valid JSON
+            // for the javascript, which fetches it with dataType 'json'.
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
+            if (! headers_sent()) {
+                header('Content-Type: application/json');
+            }
             $this->ajaxRender(json_encode(array(
                 'result' => 'failure'
             )));

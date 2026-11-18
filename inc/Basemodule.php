@@ -1331,22 +1331,34 @@ class WalleeBasemodule
         try {
             WalleeServiceMethodconfiguration::instance()->synchronize();
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, false);
+            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, null);
             $errors[] = $module->l('Synchronization of the payment method configurations failed.', 'basemodule');
         }
         try {
             WalleeServiceWebhook::instance()->install();
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, false);
+            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, null);
             $errors[] = $module->l(
                 'Installation of the webhooks failed, please check if the feature is active in your space.',
                 'basemodule'
             );
         }
         try {
+            // Force payload signing on every existing webhook listener so unsigned webhooks can never be sent to us,
+            // even for listeners created before signing was enforced.
+            require_once _PS_MODULE_DIR_ . $module->name . '/inc/Webhooksignature.php';
+            Webhooksignature::run();
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, null);
+            $errors[] = $module->l(
+                'Enforcing webhook signatures failed, please check if the feature is active in your space.',
+                'basemodule'
+            );
+        }
+        try {
             WalleeServiceManualtask::instance()->update();
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, false);
+            PrestaShopLogger::addLog($e->getMessage(), 2, null, null, null);
             $errors[] = $module->l('Update of Manual Tasks failed.', 'basemodule');
         }
         self::deleteCachedEntries();
@@ -1494,7 +1506,7 @@ class WalleeBasemodule
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null
+        ?Shop $shop = null
     ) {
         if ($module->active) {
             WalleeHelper::startDBTransaction();
@@ -1653,7 +1665,7 @@ class WalleeBasemodule
                     die();
                 }
             } catch (Exception $e) {
-                PrestaShopLogger::addLog($e->getMessage(), 3, null, null, false);
+                PrestaShopLogger::addLog($e->getMessage(), 3, null, null, null);
                 WalleeHelper::deleteOrderEmails($dataOrder);
                 WalleeBasemodule::startRecordingMailMessages();
                 $canceledStatusId = Configuration::get(self::CK_STATUS_FAILED);

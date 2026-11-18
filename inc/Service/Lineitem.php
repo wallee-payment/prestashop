@@ -45,8 +45,7 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
         $taxAddress = new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $orderTotal = $cart->getOrderTotal(true, Cart::BOTH);
 
-        $configuration = WalleeVersionadapter::getConfigurationInterface();
-        $compute_precision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $compute_precision = WalleeVersionadapter::getPriceComputePrecision();
 
         // Needed for discounts;
         $usedTaxes = array();
@@ -207,7 +206,7 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
                 $psTaxes = $wrappingTaxCalculator->getTaxesAmount(
                     $wrappingCostExcl,
                     $wrappingCosts,
-                    _PS_PRICE_COMPUTE_PRECISION_,
+                    WalleeVersionadapter::getPriceComputePrecision(),
                     Configuration::get('PS_PRICE_ROUND_MODE')
                 );
                 $taxes = array();
@@ -238,7 +237,16 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
                     'lineitem'
                 ) : $discount['description'];
 
-                $discountIncludingTax = Tools::ps_round($discount['value_real'], $compute_precision);
+                $cartRule = new CartRule($discount['id_cart_rule']);
+
+                $discountIncludingTax = Tools::ps_round(
+                    $this->correctSelectionDiscountWithTax(
+                        $cartRule,
+                        $cart->id,
+                        Tools::ps_round($discount['value_real'], $compute_precision)
+                    ),
+                    $compute_precision
+                );
 
                 $discountItems = $this->getDiscountItems(
                     $nameBase,
@@ -246,7 +254,7 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
                     'cart-' . $cart->id . '-discount-' . $discount['id_cart_rule'],
                     (float) $discountIncludingTax,
                     (float) $discount['value_tax_exc'],
-                    new CartRule($discount['id_cart_rule']),
+                    $cartRule,
                     $usedTaxes,
                     $cheapestProduct,
                     $productTotalExc,
@@ -524,7 +532,7 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
                 $psTaxes = $wrappingTaxCalculator->getTaxesAmount(
                     $wrappingCostExcl,
                     $wrappingCosts,
-                    _PS_PRICE_COMPUTE_PRECISION_,
+                    WalleeVersionadapter::getPriceComputePrecision(),
                     $order->round_mode
                 );
                 $taxes = array();
@@ -645,8 +653,7 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
         if ($roundingError > 0.01 && $roundingError <= 0.05 && defined('PS_ROUND_CHF_5CTS') && $round_mode == PS_ROUND_CHF_5CTS) {
             return $differnceToTotalAmount;
         } else {
-            $configuration = WalleeVersionadapter::getConfigurationInterface();
-            $compute_precision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+            $compute_precision = WalleeVersionadapter::getPriceComputePrecision();
 
             $allowedRoundingDifference = 1 / pow(10, $compute_precision);
 
@@ -658,6 +665,59 @@ class WalleeServiceLineitem extends WalleeServiceAbstract
         }
     }
 
+
+    /**
+     * Corrects the tax included amount of a percentage discount on a selection of products.
+     *
+     * Prestashop 8 computes that amount from price_without_reduction, so a product with a specific
+     * price is discounted on its undiscounted price, while the cart total is built from the price
+     * the customer actually pays. Prestashop 9 uses price_with_reduction and needs no correction.
+     * Without it the discount line item is larger than the discount in the cart, the line items do
+     * not add up to the cart total and the whole set is rejected. The tax excluded amount is
+     * computed from price in both versions and is not affected.
+     *
+     * Only apply this to CartRule::value_real taken from a cart. The amount stored in
+     * order_cart_rule is the discount the customer was actually charged and is already correct, so
+     * correcting it again understates the discount and breaks the line items of an order.
+     *
+     * @param CartRule $cartRule
+     * @param int $cartIdUsed
+     * @param float $discountWithTax
+     * @return float
+     */
+    private function correctSelectionDiscountWithTax(CartRule $cartRule, $cartIdUsed, $discountWithTax)
+    {
+        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
+            return $discountWithTax;
+        }
+        if ((float) $cartRule->reduction_percent <= 0 || (int) $cartRule->reduction_product != - 2) {
+            return $discountWithTax;
+        }
+        $cart = $this->getCartFromCache($cartIdUsed);
+        if ($cart === null || ! Validate::isLoadedObject($cart)) {
+            return $discountWithTax;
+        }
+        $selectedProducts = WalleeCartruleaccessor::checkProductRestrictionsStatic($cartRule, $cart);
+        if (! is_array($selectedProducts)) {
+            return $discountWithTax;
+        }
+        $reductionOnUnreducedPrices = 0;
+        foreach ($cart->getProducts() as $product) {
+            if (! in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selectedProducts) &&
+                ! in_array($product['id_product'] . '-0', $selectedProducts)) {
+                continue;
+            }
+            if ($cartRule->reduction_exclude_special && $product['reduction_applies']) {
+                continue;
+            }
+            if (! isset($product['price_without_reduction']) || ! isset($product['price_with_reduction'])) {
+                continue;
+            }
+            $reductionOnUnreducedPrices += ($product['price_without_reduction'] - $product['price_with_reduction']) *
+                $product['cart_quantity'];
+        }
+        return $discountWithTax - $reductionOnUnreducedPrices * $cartRule->reduction_percent / 100;
+    }
 
     private function getDiscountItems(
         $nameBase,

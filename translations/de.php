@@ -265,3 +265,4 @@ $_MODULE['<{wallee}prestashop>payment_additional_c6e414f7b4470fe1f8195e87f1fbb94
 $_MODULE['<{wallee}prestashop>payment_additional_21034ae6d01a83e702839a72ba8a77b0'] = '(exkl. Steuer)';
 $_MODULE['<{wallee}prestashop>payment_additional_334721e5f1ee825da687fcaede010724'] = 'Zahlungsgebühr:';
 $_MODULE['<{wallee}prestashop>payment_additional_1f87346a16cf80c372065de3c54c86d9'] = '(inkl. Steuer)';
+$_MODULE['<{wallee}prestashop>payment_by_binaries_35895cff7df70dab18783453e2bd241f'] = 'Mit %s bezahlen';

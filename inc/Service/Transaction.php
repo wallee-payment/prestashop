@@ -470,7 +470,7 @@ class WalleeServiceTransaction extends WalleeServiceAbstract
      */
     public function getPossiblePaymentMethods(
         Cart $cart,
-        \Wallee\Sdk\Model\Transaction $transaction = null
+        ?\Wallee\Sdk\Model\Transaction $transaction = null
     ) {
         return $this->warmPossiblePaymentMethodCache($cart, $transaction);
     }
@@ -488,7 +488,7 @@ class WalleeServiceTransaction extends WalleeServiceAbstract
      */
     private function warmPossiblePaymentMethodCache(
         Cart $cart,
-        \Wallee\Sdk\Model\Transaction $transaction = null,
+        ?\Wallee\Sdk\Model\Transaction $transaction = null,
         $forceReload = false,
         $failSilently = false
     ) {
